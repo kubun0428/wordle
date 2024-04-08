@@ -1,0 +1,43 @@
+footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 15px;
+
+  position: fixed;
+  bottom: 0;
+  width: 100vw;
+
+  padding-bottom: 220px;
+}
+
+.keyboard-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 35px;
+  gap: 15px;
+}
+
+.keyboard-key {
+  background-color: rgb(206, 206, 206);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 30px;
+  height: 40px;
+  border-radius: 5px;
+}
+
+.keyboard-key-long {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 15px;
+  width: 20px;
+  height: 40px;
+  padding: 0 30px 0 30px;
+  background-color: rgb(206, 206, 206);
+  border-radius: 5px;
+}
