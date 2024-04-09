@@ -1,4 +1,7 @@
 const answer = "APPLE";
+const keyboardKeys = document.querySelectorAll(
+  ".keyboard-key, .keyboard-key-long"
+);
 
 let attempts = 0;
 let index = 0;
@@ -14,21 +17,36 @@ function appStart() {
       formerBlock.innerText = "";
     }
   };
-  const displayGameOver = () => {
+  const displayGameOver = (flag) => {
     const div = document.createElement("div");
-    div.innerText = "game end!";
-    div.style =
-      "display:flex; justify-content:center; align-items:center; position:absolute; top: 30vh; left: 30vw; background-color:white; width: 200px; height: 100px; border-radius:15px; border:1px solid black;";
+    if (flag === "found") div.innerText = "Congratulation!";
+    else if (flag === "not_found") div.innerText = "Try Again!";
+    div.style = `
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: rgba(0, 0, 0, 0.5);
+      color: white;
+      font-size: 35px;
+      z-index: 1000;
+    `;
     document.body.appendChild(div);
   };
 
-  const gameOver = () => {
+  const gameOver = (flag) => {
     window.removeEventListener("keydown", handleKeyDown);
-    displayGameOver();
+    displayGameOver(flag);
     clearInterval(timer);
   };
   const nextLine = () => {
-    if (attempts === 6) return gameOver();
+    if (attempts === 5) {
+      gameOver("not_found");
+    }
     attempts++;
     index = 0;
   };
@@ -41,17 +59,35 @@ function appStart() {
       );
       const input_word = block.innerText;
       const answer_word = answer[i];
+      const keyElement = document.querySelector(
+        `.keyboard-key[data-key="${input_word}"], .keyboard-key-long[data-key="${input_word}"]`
+      );
       if (input_word === answer_word) {
         correct_count++;
         block.style.background = "#67B360";
-      } else if (answer.includes(input_word))
+        if (keyElement) keyElement.style.backgroundColor = "#67B360";
+      } else if (answer.includes(input_word)) {
         block.style.background = "#D6BE4E";
-      else block.style.background = "grey";
+        if (keyElement) keyElement.style.backgroundColor = "#D6BE4E";
+      } else block.style.background = "grey";
       block.style.color = "white";
     }
 
-    if (correct_count === 5) gameOver();
+    if (correct_count === 5) gameOver("found");
     else nextLine();
+  };
+
+  const startTimer = () => {
+    const start_time = new Date();
+    function setTime() {
+      const current_time = new Date();
+      elapsed_time = new Date(current_time - start_time);
+      const minute = elapsed_time.getMinutes().toString().padStart(2, "0");
+      const second = elapsed_time.getSeconds().toString().padStart(2, "0");
+      const timeDiv = document.querySelector("#timer");
+      timeDiv.innerText = `${minute}:${second}`;
+    }
+    timer = setInterval(setTime, 1000);
   };
 
   const handleKeyDown = (event) => {
@@ -70,20 +106,21 @@ function appStart() {
     }
   };
 
-  const startTimer = () => {
-    const start_time = new Date();
-    function setTime() {
-      const current_time = new Date();
-      elapsed_time = new Date(current_time - start_time);
-      const minute = elapsed_time.getMinutes().toString().padStart(2, "0");
-      const second = elapsed_time.getSeconds().toString().padStart(2, "0");
-      const timeDiv = document.querySelector("#timer");
-      timeDiv.innerText = `${minute}:${second}`;
+  const handleClick = (event) => {
+    const key = event.target.getAttribute("data-key");
+
+    if (key === "BACKSPACE") handleBackspace();
+    else if (key === "ENTER") handleEnterkey();
+    else {
+      const tmpEvent = { key: key, keyCode: key.charCodeAt(0) };
+      handleKeyDown(tmpEvent);
     }
-    timer = setInterval(setTime, 1000);
   };
   startTimer();
   window.addEventListener("keydown", handleKeyDown);
+  keyboardKeys.forEach((key) => {
+    key.addEventListener("click", handleClick);
+  });
 }
 
 appStart();
