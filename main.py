@@ -1,26 +1,12 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
+from fastapi.staticfiles import StaticFiles
 app = FastAPI()
 
-class Item(BaseModel):
-    id:int
-    content:str
+answer='TRAIN'
 
-items = ['맥북', '애플워치', '아이폰', '에어팟']
+@app.get('answer')
+def get_answer():
+    return answer
 
-# @app.get('/items')
-# def read_items():
-#     return items
-
-@app.get('/items/{id}')
-def read_id_items(id):
-    return items[int(id)]
-
-@app.get('/items')
-def read_items(skip:int=0, limit:int=10):
-    return items[skip:skip+limit]
-
-@app.post("/items")
-def post_item(item:Item):
-    items.append(item.content)
-    return '성공했습니다!'
+app.mount("/", StaticFiles(directory="static", html=True), name="static")

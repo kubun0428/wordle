@@ -1,4 +1,3 @@
-const answer = "APPLE";
 const keyboardKeys = document.querySelectorAll(
   ".keyboard-key, .keyboard-key-long"
 );
@@ -51,8 +50,10 @@ function appStart() {
     index = 0;
   };
 
-  const handleEnterkey = () => {
+  const handleEnterkey = async () => {
     let correct_count = 0;
+    const response = await fetch("/answer");
+    const answer = await response.json();
     for (let i = 0; i < 5; i++) {
       const block = document.querySelector(
         `.board-column[data-index="${attempts}${i}"]`
