@@ -65,10 +65,14 @@ function appStart() {
       if (input_word === answer_word) {
         correct_count++;
         block.style.background = "#67B360";
-        if (keyElement) keyElement.style.backgroundColor = "#67B360";
+        if (keyElement) {
+          keyElement.style.backgroundColor = "#67B360";
+          keyElement.setAttribute("correct", "");
+        }
       } else if (answer.includes(input_word)) {
         block.style.background = "#D6BE4E";
-        if (keyElement) keyElement.style.backgroundColor = "#D6BE4E";
+        if (keyElement && !keyElement.hasAttribute("correct"))
+          keyElement.style.backgroundColor = "#D6BE4E";
       } else block.style.background = "grey";
       block.style.color = "white";
     }
